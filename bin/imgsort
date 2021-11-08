@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+
+
+# imports
+import os
+import sys
+import imghdr
+import argparse
+from PIL import Image
+from fractions import Fraction
+
+
+# main
+def main(args):
+    # get arguments
+    filenames = args.filenames
+    size = args.size
+    opposite = args.opposite
+    verbose = args.verbose
+
+    # if no files are provided, read from STDIN
+    if filenames == []:
+        filenames = sys.stdin
+
+    # get ratio
+    if ":" in size:
+        size = size.split(":")
+        width = int(size[0])
+        height = int(size[1])
+        ratio = Fraction(width, height)
+
+        for file in filenames:
+            file = file.rstrip()  # remove trailing newline
+
+            if os.path.isfile(file) and imghdr.what(file):
+                img = Image.open(file)
+                img_width, img_height = img.size
+                img_ratio = Fraction(img_width, img_height)
+                if (img_ratio == ratio) ^ opposite:
+                    print(f"{file}")
+                    if verbose:
+                        print(f"{file} is of ratio {str(img_ratio).replace('/', ':')}", file=sys.stderr)
+
+    # get resolution
+    else:
+        size = size.split("x")
+        width = int(size[0])
+        height = int(size[1])
+
+        for file in filenames:
+            file = file.rstrip()  # remove trailing newline
+
+            if os.path.isfile(file) and imghdr.what(file):
+                img = Image.open(file)
+                img_width, img_height = img.size
+                if (img_width == width and img_height == height) ^ opposite:
+                    print(f"{file}")
+                    if verbose:
+                        print(f"{file} is of resolution {img_width}x{img_height}", file=sys.stderr)
+
+
+# run if called
+if __name__ == "__main__":
+    # epilog with examples
+    epilog = "Documentation, bug reports and suggestions are welcome at:\nhttps://github.com/jpmvferreira/imgsort"
+
+    # create argparser
+    parser = argparse.ArgumentParser(description = "A simple terminal utility to help you filter image files by resolution or ratio.", add_help=False, epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    # create groups
+    parser._action_groups.pop()
+    required = parser.add_argument_group("Required arguments")
+    config = parser.add_argument_group("Configuration arguments")
+    help = parser.add_argument_group("Help dialog")
+
+
+    # required arguments
+    required.add_argument("filenames", nargs="*", help="Specify image files. Can also read files from STDIN.")
+
+    # configuration arguments
+    config.add_argument("-s", "--size", type=str, help="Check for a given resolution (e.g.: 1920x1080) or a given ratio (e.g.: 16:9).", required=True)
+    config.add_argument("-o", "--opposite", action="store_true", help="Checks for the opposite ratio/resolution provided.")
+    config.add_argument("-v", "--verbose", action="store_true", help="Prints additional information for debugging purposes.")
+
+    # add help to its own subsection
+    help.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS, help="Show this help message and exit.")
+
+    # get arguments
+    args = parser.parse_args()
+
+    # call main with args
+    main(args)
