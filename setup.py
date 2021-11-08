@@ -4,7 +4,7 @@ with open(f"README.md") as f:
     long_description = f.read()
 
 setup(name="imgsort",
-      version="dev",
+      version="1.0.0",
       description="A terminal utility to sort image files based on their characteristics.",
       long_description=long_description,
       long_description_content_type='text/markdown',
