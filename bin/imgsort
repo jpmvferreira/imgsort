@@ -61,11 +61,8 @@ def main(args):
 
 # run if called
 if __name__ == "__main__":
-    # epilog with examples
-    epilog = "Documentation, bug reports and suggestions are welcome at:\nhttps://github.com/jpmvferreira/imgsort"
-
     # create argparser
-    parser = argparse.ArgumentParser(description = "A simple terminal utility to help you filter image files by resolution or ratio.", add_help=False, epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(description = "A simple terminal utility to help you filter image files by resolution or ratio.", add_help=False, epilog="Documentation, bug reports and suggestions are welcome at:\nhttps://github.com/jpmvferreira/imgsort")
 
     # create groups
     parser._action_groups.pop()
