@@ -10,6 +10,31 @@ from PIL import Image
 from fractions import Fraction
 
 
+# create the argument parser
+def GetParser():
+    # create argparser
+    parser = argparse.ArgumentParser(description = "A simple terminal utility to help you filter image files by resolution or ratio.", add_help=False, epilog="Documentation, bug reports and suggestions are welcome at:\nhttps://github.com/jpmvferreira/imgsort")
+
+    # create groups
+    parser._action_groups.pop()
+    required = parser.add_argument_group("Required arguments")
+    config = parser.add_argument_group("Configuration arguments")
+    help = parser.add_argument_group("Help dialog")
+
+
+    # required arguments
+    required.add_argument("filenames", nargs="*", help="Specify image files. Can also read files from STDIN.")
+
+    # configuration arguments
+    config.add_argument("-s", "--size", type=str, help="Check for a given resolution (e.g.: 1920x1080) or a given ratio (e.g.: 16:9).", required=True)
+    config.add_argument("-o", "--opposite", action="store_true", help="Checks for the opposite ratio/resolution provided.")
+    config.add_argument("-v", "--verbose", action="store_true", help="Prints additional information for debugging purposes.")
+
+    # add help to its own subsection
+    help.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS, help="Show this help message and exit.")
+
+    return parser
+
 # main
 def main(args):
     # get arguments
@@ -61,29 +86,11 @@ def main(args):
 
 # run if called
 if __name__ == "__main__":
-    # create argparser
-    parser = argparse.ArgumentParser(description = "A simple terminal utility to help you filter image files by resolution or ratio.", add_help=False, epilog="Documentation, bug reports and suggestions are welcome at:\nhttps://github.com/jpmvferreira/imgsort")
+    # get parser
+    parser = GetParser()
 
-    # create groups
-    parser._action_groups.pop()
-    required = parser.add_argument_group("Required arguments")
-    config = parser.add_argument_group("Configuration arguments")
-    help = parser.add_argument_group("Help dialog")
-
-
-    # required arguments
-    required.add_argument("filenames", nargs="*", help="Specify image files. Can also read files from STDIN.")
-
-    # configuration arguments
-    config.add_argument("-s", "--size", type=str, help="Check for a given resolution (e.g.: 1920x1080) or a given ratio (e.g.: 16:9).", required=True)
-    config.add_argument("-o", "--opposite", action="store_true", help="Checks for the opposite ratio/resolution provided.")
-    config.add_argument("-v", "--verbose", action="store_true", help="Prints additional information for debugging purposes.")
-
-    # add help to its own subsection
-    help.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS, help="Show this help message and exit.")
-
-    # get arguments
+    # get arguments from parser
     args = parser.parse_args()
 
-    # call main with args
+    # call main with arguments
     main(args)
