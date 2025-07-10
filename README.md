@@ -1,3 +1,8 @@
+<br/>
+<h3 align="center"> <b> Archive Notice </b> </h3>
+<h3 align="center"> This repository has been archived and will not see any future updates </h3>
+<br/>
+
 ## About
 A terminal utility to sort image files based on their characteristics.
 
